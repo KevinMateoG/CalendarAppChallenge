@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from datetime import datetime, date, time
+from email.policy import default
 from typing import ClassVar
 
+import app.services.util
 from app.services.util import generate_unique_id, date_lower_than_today_error, event_not_found_error, \
     reminder_not_found_error, slot_not_available_error
 
@@ -23,10 +25,15 @@ class Event:
     date_: date
     start_at: time
     end_at: time
+    reminders: list[Reminder] = field(init=False,default_factory = list)
+    id: str = app.services.util.generate_unique_id()
 
-    reminders: list[Reminder] = field(default_factory = list)
+    def add_reminder(self, date_time: datetime, EMAIL:str = "email", SYSTEM:str = "system", type:str = Reminder.EMAIL):
+        new = Reminder(date_time, EMAIL, SYSTEM, type)
+        self.reminders.append(new)
 
-    id: str = field(default_factory = generate_unique_id)
-
-    #def add_reminder(self):
-
+    def delete_reminder(self, reminder_index:int):
+        if self.reminders[reminder_index] in self.reminders:
+            return self.reminders.pop(reminder_index)
+        else:
+            return app.services.util.reminder_not_found_error()
