@@ -39,4 +39,6 @@ class Event:
             return app.services.util.reminder_not_found_error()
 
     def __str__(self):
-        return f"ID: {id}Event title: {self.title}\n Description: {self.description}\n Time: {self.start_at} - {self.end_at}"
+        return (f"ID: {self.id}Event title: {self.title}\n"
+                f"Description: {self.description}\n"
+                f"Time: {self.start_at} - {self.end_at}")
